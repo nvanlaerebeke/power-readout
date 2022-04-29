@@ -2,15 +2,20 @@ namespace PowerReadOut;
 
 internal class PowerConsumptionData
 {
-    private readonly Receiver _receiver = new();
-    private DataRecord _current = new();
+    private readonly Receiver _receiver;
+    private DataRecord _current;
+
+    public PowerConsumptionData()
+    {
+        _receiver = new Receiver(data =>
+        {
+            _current = DataRecord.FromBytes(data.GetData());
+        });
+    }
 
     public void StartReceiving()
     {
-        _receiver.OnReceive(data =>
-        {
-            _current = data;
-        });
+        _receiver.StartReceiving();
     }
 
     public DataRecord Get()
