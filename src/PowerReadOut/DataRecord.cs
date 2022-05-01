@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -59,81 +60,115 @@ internal struct DataRecord
 
     [JsonPropertyName("device_id")]
     public string DeviceId { get; }
+
     [JsonPropertyName("power_device_id")]
     public string PowerDeviceId { get; }
-    
+
     [JsonPropertyName("device_type")]
     public string DeviceType { get; }
+
     [JsonPropertyName("protocol_version")]
     public string ProtocolVersion { get; }
+
     [JsonPropertyName("power_breaker_state")]
     public string PowerBreakerState { get; }
+
     [JsonPropertyName("power_device_serial_number")]
     public string PowerDeviceSerialNumber { get; }
+
     [JsonPropertyName("l1_power_usage")]
     public string L1PowerUsage { get; }
+
     [JsonPropertyName("l2_power_usage")]
     public string L2PowerUsage { get; }
+
     [JsonPropertyName("l3_power_usage")]
     public string L3PowerUsage { get; }
+
     [JsonPropertyName("l1_power_generated")]
     public string L1PowerGenerated { get; }
+
     [JsonPropertyName("l2_power_generated")]
     public string L2PowerGenerated { get; }
+
     [JsonPropertyName("l3_power_generated")]
     public string L3PowerGenerated { get; }
+
     [JsonPropertyName("l1_amperage")]
     public string L1Amperage { get; }
+
     [JsonPropertyName("l2_amperage")]
     public string L2Amperage { get; }
+
     [JsonPropertyName("l3_amperage")]
     public string L3Amperage { get; }
+
     [JsonPropertyName("l1_voltage")]
     public string L1Voltage { get; }
+
     [JsonPropertyName("l2_voltage")]
     public string L2Voltage { get; }
+
     [JsonPropertyName("l3_voltage")]
     public string L3Voltage { get; }
+
     [JsonPropertyName("current_tariff")]
     public string CurrentTariff { get; }
+
     [JsonPropertyName("power_generated_tariff_1")]
     public string PowerGeneratedTariff1 { get; }
+
     [JsonPropertyName("power_generated_tariff_2")]
     public string PowerGeneratedTariff2 { get; }
+
     [JsonPropertyName("power_used_tariff_1")]
     public string PowerUsedTariff1 { get; }
+
     [JsonPropertyName("power_used_tariff_2")]
     public string PowerUsedTariff2 { get; }
+
     [JsonPropertyName("total_power_used")]
     public string TotalPowerUsed { get; }
+
     [JsonPropertyName("total_power_generated")]
     public string TotalPowerGenerated { get; }
+
     [JsonPropertyName("max_phase_power")]
     public string MaxPhasePower { get; }
+
     [JsonPropertyName("l1_fuse_threshold")]
     public string L1FuseThreshold { get; }
+
     [JsonPropertyName("power_failure_count")]
     public string PowerFailureCount { get; }
+
     [JsonPropertyName("power_failure_log")]
     public string PowerFailureLog { get; }
+
     [JsonPropertyName("long_power_failure_count")]
     public string LongPowerFailureCount { get; }
 
     [JsonPropertyName("gas_device_id")]
     public string GasDeviceId { get; }
+
     [JsonPropertyName("gas_device_serial_number")]
     public string GasDeviceSerialNumber { get; }
+
     [JsonPropertyName("gas_breaker_state")]
     public string GasBreakerState { get; }
+
     [JsonPropertyName("gas_used")]
     public string GasUsed { get; }
+
     [JsonPropertyName("gas_usage_timestamp")]
     public string GasUsageTimestamp { get; }
-    
+
     [JsonPropertyName("devices_on_bus")]
     public string DevicesOnBus { get; }
+
     [JsonPropertyName("timestamp")]
     public string TimeStamp { get; }
+
     [JsonPropertyName("text_message")]
     public string TextMessage { get; }
 
@@ -179,13 +214,15 @@ internal struct DataRecord
             }
 
             var data_start = record.IndexOf('(');
-            var id = GetDataType(record[..data_start]);
+            
+            var obis_code = record[..data_start];
+            var id = GetDataType(obis_code);
             var value = record[(data_start + 1)..^1];
 
             if (id == DataType.GasUsageRecord)
             {
                 data.Add(DataType.GasUsageTimeStamp, value[..value.IndexOf(')')]);
-                data.Add(DataType.GasUsed, value[(value.IndexOf('(')+1)..]);
+                data.Add(DataType.GasUsed, value[(value.IndexOf('(') + 1)..]);
                 continue;
             }
 
@@ -259,6 +296,7 @@ internal struct DataRecord
                 return DataType.GasUsed;
 
             case "0-0:96.1.4":
+            case "0:96.1.4":
                 return DataType.ProtocolVersion;
             case "0-0:96.3.10":
                 return DataType.PowerBreakerState;

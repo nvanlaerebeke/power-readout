@@ -1,38 +1,48 @@
 using System.IO.Ports;
 
-namespace PowerReadOut;
+namespace PowerReadOut.Receivers;
 
-internal class Receiver
+internal class SerialPortReceiver : IReceiver, IDisposable
 {
+    private const string PORT = "/dev/ttyUSB0";
+    private const int BAUD_RATE = 115200;
+    private const byte SLASH = 47;
+
     /// <summary>
-    /// Action that will be called when a complete telegram was received
-    /// </summary>
-    private readonly Action<Telegram> _telegramReceived;
-    
-    /// <summary>
-    /// Serial port that will be read from
+    ///     Serial port that will be read from
     /// </summary>
     private readonly SerialPort _serialPort;
 
     /// <summary>
-    /// Current telegram that's being received
+    ///     Current telegram that's being received
     /// </summary>
     private Telegram _telegram;
 
-    private const byte SLASH = 47;
-    
-    public Receiver(Action<Telegram> telegramReceived)
+    /// <summary>
+    ///     Action that will be called when a complete telegram was received
+    /// </summary>
+    private Action<Telegram>? _telegramReceived;
+
+    public SerialPortReceiver()
     {
-        _telegramReceived = telegramReceived;
         _telegram = new Telegram();
-        _serialPort = new SerialPort("/dev/ttyUSB0", 115200);
+        _serialPort = new SerialPort(PORT, BAUD_RATE);
         _serialPort.Handshake = Handshake.XOnXOff;
     }
 
-    public void StartReceiving()
+    public void Dispose()
     {
-        _serialPort.Open();
-        _serialPort.DataReceived += serialPort_DataReceived;
+        _serialPort.Dispose();
+    }
+
+    public Task StartReceiving(Action<Telegram> telegramReceived)
+    {
+        return Task.Run(() =>
+        {
+            _telegramReceived = telegramReceived;
+            _serialPort.Open();
+            _serialPort.DataReceived += serialPort_DataReceived;
+        });
     }
 
     private void serialPort_DataReceived(object s, SerialDataReceivedEventArgs e)
@@ -53,7 +63,7 @@ internal class Receiver
                     continue;
                 }
             }
-            
+
             //If the telegram is already complete, don't do anything
             if (_telegram.IsComplete())
             {
@@ -66,16 +76,11 @@ internal class Receiver
             //If the telegram is complete (and valid), let the application know
             if (_telegram.IsComplete())
             {
-                if (_telegram.IsValid())
+                if (_telegram.IsValid() && _telegramReceived != null)
                 {
                     _telegramReceived(_telegram);
                 }
             }
         }
-    }
-
-    public void Dispose()
-    {
-        _serialPort.Dispose();
     }
 }

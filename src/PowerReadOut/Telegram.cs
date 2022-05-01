@@ -5,15 +5,20 @@ namespace PowerReadOut;
 
 internal class Telegram
 {
-    private readonly List<byte> _data = new();
-    private int _endIndex;
     private const byte SLASH = 47;
     private const byte EXCLAMATION = 33;
+    private readonly List<byte> _data = new();
+    private int _endIndex;
+
     public void Add(byte data)
     {
         //All data for this telegram was already received
         if (_endIndex != 0 && _data.Count == _endIndex + 5)
-        {
+        {        
+            if (char.IsControl(Convert.ToChar(data)))
+            {
+                return;
+            }
             throw new Exception("Telegram is complete, unable to add extra data");
         }
 
@@ -21,7 +26,7 @@ internal class Telegram
         {
             throw new Exception("Telegram start character is not correct");
         }
-        
+
         //Add to data list
         _data.Add(data);
 
@@ -51,7 +56,11 @@ internal class Telegram
         return Crc32Algorithm.IsValidWithCrcAtEnd(arr);
     }
 
-    public byte[] GetData() => _data.ToArray();
+    public byte[] GetData()
+    {
+        return _data.ToArray();
+    }
+
     public override string ToString()
     {
         return IsComplete() && IsValid() ? Encoding.UTF8.GetString(_data.ToArray()) : string.Empty;
