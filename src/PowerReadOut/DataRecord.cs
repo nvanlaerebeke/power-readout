@@ -1,5 +1,8 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.VisualBasic.CompilerServices;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -8,185 +11,142 @@ namespace PowerReadOut;
 
 internal struct DataRecord
 {
-    private readonly Dictionary<DataType, string> _data;
+    private readonly Dictionary<DataType, RecordValue> _data;
 
-    public DataRecord(Dictionary<DataType, string> data)
+    public DataRecord(Dictionary<DataType, RecordValue> data)
     {
         _data = data;
-
-        DeviceName = data.ContainsKey(DataType.DeviceName) ? data[DataType.DeviceName] : string.Empty;
-        DeviceId = data.ContainsKey(DataType.PowerDeviceId) ? data[DataType.PowerDeviceId] : string.Empty;
-        TimeStamp = data.ContainsKey(DataType.TimeStamp) ? data[DataType.TimeStamp] : string.Empty;
-        PowerDeviceId = data.ContainsKey(DataType.PowerDeviceId) ? data[DataType.PowerDeviceId] : string.Empty;
-        PowerDeviceSerialNumber = data.ContainsKey(DataType.PowerDeviceSerialNumber) ? data[DataType.PowerDeviceSerialNumber] : string.Empty;
-        PowerUsedTariff1 = data.ContainsKey(DataType.PowerUsedTariff1) ? data[DataType.PowerUsedTariff1] : string.Empty;
-        PowerUsedTariff2 = data.ContainsKey(DataType.PowerUsedTariff2) ? data[DataType.PowerUsedTariff2] : string.Empty;
-        PowerGeneratedTariff1 = data.ContainsKey(DataType.PowerGeneratedTariff1) ? data[DataType.PowerGeneratedTariff1] : string.Empty;
-        PowerGeneratedTariff2 = data.ContainsKey(DataType.PowerGeneratedTariff2) ? data[DataType.PowerGeneratedTariff2] : string.Empty;
-        CurrentTariff = data.ContainsKey(DataType.CurrentTariff) ? data[DataType.CurrentTariff] : string.Empty;
-        TotalPowerGenerated = data.ContainsKey(DataType.TotalPowerGenerated) ? data[DataType.TotalPowerGenerated] : string.Empty;
-        TotalPowerUsed = data.ContainsKey(DataType.TotalPowerUsed) ? data[DataType.TotalPowerUsed] : string.Empty;
-        PowerFailureCount = data.ContainsKey(DataType.PowerFailureCount) ? data[DataType.PowerFailureCount] : string.Empty;
-        LongPowerFailureCount = data.ContainsKey(DataType.LongPowerFailureCount) ? data[DataType.LongPowerFailureCount] : string.Empty;
-        PowerFailureLog = data.ContainsKey(DataType.PowerFailureLog) ? data[DataType.PowerFailureLog] : string.Empty;
-        L1Voltage = data.ContainsKey(DataType.L1Voltage) ? data[DataType.L1Voltage] : string.Empty;
-        L2Voltage = data.ContainsKey(DataType.L2Voltage) ? data[DataType.L2Voltage] : string.Empty;
-        L3Voltage = data.ContainsKey(DataType.L3Voltage) ? data[DataType.L3Voltage] : string.Empty;
-        L1Amperage = data.ContainsKey(DataType.L1Amperage) ? data[DataType.L1Amperage] : string.Empty;
-        L2Amperage = data.ContainsKey(DataType.L2Amperage) ? data[DataType.L2Amperage] : string.Empty;
-        L3Amperage = data.ContainsKey(DataType.L3Amperage) ? data[DataType.L3Amperage] : string.Empty;
-        L1PowerUsage = data.ContainsKey(DataType.L1PowerUsage) ? data[DataType.L1PowerUsage] : string.Empty;
-        L2PowerUsage = data.ContainsKey(DataType.L2PowerUsage) ? data[DataType.L2PowerUsage] : string.Empty;
-        L3PowerUsage = data.ContainsKey(DataType.L3PowerUsage) ? data[DataType.L3PowerUsage] : string.Empty;
-        L1PowerGenerated = data.ContainsKey(DataType.L1PowerGenerated) ? data[DataType.L1PowerGenerated] : string.Empty;
-        L2PowerGenerated = data.ContainsKey(DataType.L2PowerGenerated) ? data[DataType.L2PowerGenerated] : string.Empty;
-        L3PowerGenerated = data.ContainsKey(DataType.L3PowerGenerated) ? data[DataType.L3PowerGenerated] : string.Empty;
-        DeviceType = data.ContainsKey(DataType.DeviceType) ? data[DataType.DeviceType] : string.Empty;
-        GasDeviceId = data.ContainsKey(DataType.GasDeviceId) ? data[DataType.GasDeviceId] : string.Empty;
-        GasUsed = data.ContainsKey(DataType.GasUsed) ? data[DataType.GasUsed] : string.Empty;
-        ProtocolVersion = data.ContainsKey(DataType.ProtocolVersion) ? data[DataType.ProtocolVersion] : string.Empty;
-        PowerBreakerState = data.ContainsKey(DataType.PowerBreakerState) ? data[DataType.PowerBreakerState] : string.Empty;
-        MaxPhasePower = data.ContainsKey(DataType.MaxPhasePower) ? data[DataType.MaxPhasePower] : string.Empty;
-        L1FuseThreshold = data.ContainsKey(DataType.L1FuseThreshold) ? data[DataType.L1FuseThreshold] : string.Empty;
-        TextMessage = data.ContainsKey(DataType.TextMessage) ? data[DataType.TextMessage] : string.Empty;
-        DevicesOnBus = data.ContainsKey(DataType.DevicesOnBus) ? data[DataType.DevicesOnBus] : string.Empty;
-        GasDeviceSerialNumber = data.ContainsKey(DataType.GasDeviceSerialNumber) ? data[DataType.GasDeviceSerialNumber] : string.Empty;
-        GasBreakerState = data.ContainsKey(DataType.GasBreakerState) ? data[DataType.GasBreakerState] : string.Empty;
-        GasUsageTimestamp = data.ContainsKey(DataType.GasUsageTimeStamp) ? data[DataType.GasUsageTimeStamp] : string.Empty;
     }
 
     [JsonPropertyName("device_name")]
-    public string DeviceName { get; }
+    public RecordValue? DeviceName  => _data.ContainsKey(DataType.DeviceName) ? _data[DataType.DeviceName] : null; 
 
     [JsonPropertyName("device_id")]
-    public string DeviceId { get; }
-
-    [JsonPropertyName("power_device_id")]
-    public string PowerDeviceId { get; }
-
+    public RecordValue? DeviceId => _data.ContainsKey(DataType.PowerDeviceId) ? _data[DataType.PowerDeviceId] :null;
+    
     [JsonPropertyName("device_type")]
-    public string DeviceType { get; }
+    public RecordValue?DeviceType  => _data.ContainsKey(DataType.DeviceType) ? _data[DataType.DeviceType] : null; 
 
     [JsonPropertyName("protocol_version")]
-    public string ProtocolVersion { get; }
+    public RecordValue?ProtocolVersion  => _data.ContainsKey(DataType.ProtocolVersion) ? _data[DataType.ProtocolVersion] : null; 
 
     [JsonPropertyName("power_breaker_state")]
-    public string PowerBreakerState { get; }
+    public RecordValue?PowerBreakerState  => _data.ContainsKey(DataType.PowerBreakerState) ? _data[DataType.PowerBreakerState] : null; 
 
     [JsonPropertyName("power_device_serial_number")]
-    public string PowerDeviceSerialNumber { get; }
+    public RecordValue?PowerDeviceSerialNumber  => _data.ContainsKey(DataType.PowerDeviceSerialNumber) ? _data[DataType.PowerDeviceSerialNumber] : null; 
 
     [JsonPropertyName("l1_power_usage")]
-    public string L1PowerUsage { get; }
+    public RecordValue?L1PowerUsage  => _data.ContainsKey(DataType.L1PowerUsage) ? _data[DataType.L1PowerUsage] : null; 
 
     [JsonPropertyName("l2_power_usage")]
-    public string L2PowerUsage { get; }
+    public RecordValue?L2PowerUsage  => _data.ContainsKey(DataType.L2PowerUsage) ? _data[DataType.L2PowerUsage] : null; 
 
     [JsonPropertyName("l3_power_usage")]
-    public string L3PowerUsage { get; }
+    public RecordValue?L3PowerUsage  => _data.ContainsKey(DataType.L3PowerUsage) ? _data[DataType.L3PowerUsage] : null; 
 
     [JsonPropertyName("l1_power_generated")]
-    public string L1PowerGenerated { get; }
+    public RecordValue?L1PowerGenerated  => _data.ContainsKey(DataType.L1PowerGenerated) ? _data[DataType.L1PowerGenerated] : null; 
 
     [JsonPropertyName("l2_power_generated")]
-    public string L2PowerGenerated { get; }
+    public RecordValue?L2PowerGenerated  => _data.ContainsKey(DataType.L2PowerGenerated) ? _data[DataType.L2PowerGenerated] : null; 
 
     [JsonPropertyName("l3_power_generated")]
-    public string L3PowerGenerated { get; }
+    public RecordValue?L3PowerGenerated  => _data.ContainsKey(DataType.L3PowerGenerated) ? _data[DataType.L3PowerGenerated] : null; 
 
     [JsonPropertyName("l1_amperage")]
-    public string L1Amperage { get; }
+    public RecordValue?L1Amperage  => _data.ContainsKey(DataType.L1Amperage) ? _data[DataType.L1Amperage] : null; 
 
     [JsonPropertyName("l2_amperage")]
-    public string L2Amperage { get; }
+    public RecordValue?L2Amperage  => _data.ContainsKey(DataType.L2Amperage) ? _data[DataType.L2Amperage] : null; 
 
     [JsonPropertyName("l3_amperage")]
-    public string L3Amperage { get; }
+    public RecordValue?L3Amperage  => _data.ContainsKey(DataType.L3Amperage) ? _data[DataType.L3Amperage] : null; 
 
     [JsonPropertyName("l1_voltage")]
-    public string L1Voltage { get; }
+    public RecordValue?L1Voltage  => _data.ContainsKey(DataType.L1Voltage) ? _data[DataType.L1Voltage] : null; 
 
     [JsonPropertyName("l2_voltage")]
-    public string L2Voltage { get; }
+    public RecordValue?L2Voltage  => _data.ContainsKey(DataType.L2Voltage) ? _data[DataType.L2Voltage] : null; 
 
     [JsonPropertyName("l3_voltage")]
-    public string L3Voltage { get; }
+    public RecordValue?L3Voltage  => _data.ContainsKey(DataType.L3Voltage) ? _data[DataType.L3Voltage] : null; 
 
     [JsonPropertyName("current_tariff")]
-    public string CurrentTariff { get; }
+    public RecordValue?CurrentTariff  => _data.ContainsKey(DataType.CurrentTariff) ? _data[DataType.CurrentTariff] : null; 
 
     [JsonPropertyName("power_generated_tariff_1")]
-    public string PowerGeneratedTariff1 { get; }
+    public RecordValue?PowerGeneratedTariff1  => _data.ContainsKey(DataType.PowerGeneratedTariff1) ? _data[DataType.PowerGeneratedTariff1] : null; 
 
     [JsonPropertyName("power_generated_tariff_2")]
-    public string PowerGeneratedTariff2 { get; }
+    public RecordValue?PowerGeneratedTariff2  => _data.ContainsKey(DataType.PowerGeneratedTariff2) ? _data[DataType.PowerGeneratedTariff2] : null; 
 
     [JsonPropertyName("power_used_tariff_1")]
-    public string PowerUsedTariff1 { get; }
+    public RecordValue?PowerUsedTariff1  => _data.ContainsKey(DataType.PowerUsedTariff1) ? _data[DataType.PowerUsedTariff1] : null; 
 
     [JsonPropertyName("power_used_tariff_2")]
-    public string PowerUsedTariff2 { get; }
+    public RecordValue?PowerUsedTariff2  => _data.ContainsKey(DataType.PowerUsedTariff2) ? _data[DataType.PowerUsedTariff2] : null; 
 
     [JsonPropertyName("total_power_used")]
-    public string TotalPowerUsed { get; }
+    public RecordValue?TotalPowerUsed  => _data.ContainsKey(DataType.TotalPowerUsed) ? _data[DataType.TotalPowerUsed] : null; 
 
     [JsonPropertyName("total_power_generated")]
-    public string TotalPowerGenerated { get; }
+    public RecordValue?TotalPowerGenerated  => _data.ContainsKey(DataType.TotalPowerGenerated) ? _data[DataType.TotalPowerGenerated] : null; 
 
     [JsonPropertyName("max_phase_power")]
-    public string MaxPhasePower { get; }
+    public RecordValue?MaxPhasePower  => _data.ContainsKey(DataType.MaxPhasePower) ? _data[DataType.MaxPhasePower] : null; 
 
     [JsonPropertyName("l1_fuse_threshold")]
-    public string L1FuseThreshold { get; }
+    public RecordValue?L1FuseThreshold  => _data.ContainsKey(DataType.L1FuseThreshold) ? _data[DataType.L1FuseThreshold] : null; 
 
     [JsonPropertyName("power_failure_count")]
-    public string PowerFailureCount { get; }
+    public RecordValue?PowerFailureCount  => _data.ContainsKey(DataType.PowerFailureCount) ? _data[DataType.PowerFailureCount] : null; 
 
     [JsonPropertyName("power_failure_log")]
-    public string PowerFailureLog { get; }
+    public RecordValue?PowerFailureLog  => _data.ContainsKey(DataType.PowerFailureLog) ? _data[DataType.PowerFailureLog] : null; 
 
     [JsonPropertyName("long_power_failure_count")]
-    public string LongPowerFailureCount { get; }
+    public RecordValue?LongPowerFailureCount  => _data.ContainsKey(DataType.LongPowerFailureCount) ? _data[DataType.LongPowerFailureCount] : null; 
 
     [JsonPropertyName("gas_device_id")]
-    public string GasDeviceId { get; }
+    public RecordValue?GasDeviceId  => _data.ContainsKey(DataType.GasDeviceId) ? _data[DataType.GasDeviceId] : null; 
 
     [JsonPropertyName("gas_device_serial_number")]
-    public string GasDeviceSerialNumber { get; }
+    public RecordValue?GasDeviceSerialNumber  => _data.ContainsKey(DataType.GasDeviceSerialNumber) ? _data[DataType.GasDeviceSerialNumber] : null; 
 
     [JsonPropertyName("gas_breaker_state")]
-    public string GasBreakerState { get; }
+    public RecordValue?GasBreakerState  => _data.ContainsKey(DataType.GasBreakerState) ? _data[DataType.GasBreakerState] : null; 
 
     [JsonPropertyName("gas_used")]
-    public string GasUsed { get; }
+    public RecordValue?GasUsed  => _data.ContainsKey(DataType.GasUsed) ? _data[DataType.GasUsed] : null; 
 
     [JsonPropertyName("gas_usage_timestamp")]
-    public string GasUsageTimestamp { get; }
+    public RecordValue?GasUsageTimestamp  => _data.ContainsKey(DataType.GasUsageTimeStamp) ? _data[DataType.GasUsageTimeStamp] : null; 
 
     [JsonPropertyName("devices_on_bus")]
-    public string DevicesOnBus { get; }
+    public RecordValue?DevicesOnBus  => _data.ContainsKey(DataType.DevicesOnBus) ? _data[DataType.DevicesOnBus] : null; 
 
     [JsonPropertyName("timestamp")]
-    public string TimeStamp { get; }
+    public RecordValue?TimeStamp  => _data.ContainsKey(DataType.TimeStamp) ? _data[DataType.TimeStamp] : null; 
 
     [JsonPropertyName("text_message")]
-    public string TextMessage { get; }
+    public RecordValue?TextMessage  => _data.ContainsKey(DataType.TextMessage) ? _data[DataType.TextMessage] : null; 
 
 
     public static DataRecord FromBytes(byte[] telegram)
     {
-        var data = new Dictionary<DataType, string>();
-        data.Add(DataType.DeviceName, Encoding.UTF8.GetString(telegram[1..4]));
+        var data = new Dictionary<DataType, RecordValue>();
+        
+        data.Add(DataType.DeviceName, new RecordValue(RecordUnit.String,  Encoding.UTF8.GetString(telegram[1..4])));
 
         var index = 6;
         foreach (var b in telegram[index..])
         {
             if (char.IsControl((char) b))
             {
-                data.Add(DataType.PowerDeviceId, Encoding.UTF8.GetString(telegram[6..index]));
+                data.Add(DataType.PowerDeviceId, new RecordValue(RecordUnit.String, Encoding.UTF8.GetString(telegram[6..index])));
                 break;
             }
-
             index++;
         }
 
@@ -203,119 +163,142 @@ internal struct DataRecord
         }
 
         var dataString = Encoding.UTF8.GetString(telegram[start..index]);
-
         foreach (var line in dataString.Split(Environment.NewLine))
         {
             var record = line.Trim();
-
             if (string.IsNullOrEmpty(record))
             {
                 continue;
             }
 
             var data_start = record.IndexOf('(');
-            
-            var obis_code = record[..data_start];
-            var id = GetDataType(obis_code);
-            var value = record[(data_start + 1)..^1];
-
-            if (id == DataType.GasUsageRecord)
-            {
-                data.Add(DataType.GasUsageTimeStamp, value[..value.IndexOf(')')]);
-                data.Add(DataType.GasUsed, value[(value.IndexOf('(') + 1)..]);
-                continue;
-            }
-
-            data.Add(id, value);
+            AddRecordValue(record[..data_start], record[(data_start + 1)..^1], ref data);
         }
 
         return new DataRecord(data);
     }
 
-    private static DataType GetDataType(string dataType)
+    private static void AddRecordValue(string obisCode, string value, ref Dictionary<DataType, RecordValue> data)
     {
-        switch (dataType)
+        switch (obisCode)
         {
             case "0-0:1.0.0":
-                return DataType.TimeStamp;
+                data.Add(DataType.TimeStamp, new RecordValue(RecordUnit.Timestamp, value));
+                return;
             case "0-0:96.1.1":
-                return DataType.PowerDeviceSerialNumber;
+                data.Add(DataType.PowerDeviceSerialNumber, new RecordValue(RecordUnit.String, value));
+                return;
             case "0-n:24.1.0":
-                return DataType.DeviceType;
+                data.Add(DataType.DeviceType, new RecordValue(RecordUnit.String, value));
+                return;
             case "0-n:96.1.0":
-                return DataType.GasDeviceId;
+                data.Add(DataType.GasDeviceId, new RecordValue(RecordUnit.String, value));
+                return;
             case "1-0:1.8.1":
-                return DataType.PowerUsedTariff1;
+                data.Add(DataType.PowerUsedTariff1, new RecordValue(RecordUnit.Kilowatt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:1.8.2":
-                return DataType.PowerUsedTariff2;
+                data.Add(DataType.PowerUsedTariff2, new RecordValue(RecordUnit.Kilowatt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:2.8.1":
-                return DataType.PowerGeneratedTariff1;
+                data.Add(DataType.PowerGeneratedTariff1, new RecordValue(RecordUnit.Kilowatt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:2.8.2":
-                return DataType.PowerGeneratedTariff2;
+                data.Add(DataType.PowerGeneratedTariff2, new RecordValue(RecordUnit.Kilowatt, value[..value.IndexOf('*')]));
+                return;
             case "0-0:96.14.0":
-                return DataType.CurrentTariff;
+                data.Add(DataType.CurrentTariff, new RecordValue(RecordUnit.Integer, value));
+                return;
             case "1-0:1.7.0":
-                return DataType.TotalPowerUsed;
+                data.Add(DataType.TotalPowerUsed, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "1-0:2.7.0":
-                return DataType.TotalPowerGenerated;
+                data.Add(DataType.TotalPowerGenerated,
+                    new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "0-0:96.7.21":
-                return DataType.PowerFailureCount;
+                data.Add(DataType.PowerFailureCount, new RecordValue(RecordUnit.Integer, value));
+                return;
             case "0-0:96.7.9":
-                return DataType.LongPowerFailureCount;
+                data.Add(DataType.LongPowerFailureCount, new RecordValue(RecordUnit.Integer, value));
+                return;
             case "1-0:99.97.0":
-                return DataType.PowerFailureLog;
-
+                data.Add(DataType.PowerFailureLog, new RecordValue(RecordUnit.String, value));
+                return;
 
             case "1-0:32.7.0":
-                return DataType.L1Voltage;
+                data.Add(DataType.L1Voltage, new RecordValue(RecordUnit.Volt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:52.7.0":
-                return DataType.L2Voltage;
+                data.Add(DataType.L2Voltage, new RecordValue(RecordUnit.Volt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:72.7.0 ":
-                return DataType.L3Voltage;
+                data.Add(DataType.L3Voltage, new RecordValue(RecordUnit.Volt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:31.7.0":
-                return DataType.L1Amperage;
+                data.Add(DataType.L1Amperage, new RecordValue(RecordUnit.Ampere, value[..value.IndexOf('*')]));
+                return;
             case "1-0:51.7.0":
-                return DataType.L2Amperage;
+                data.Add(DataType.L2Amperage, new RecordValue(RecordUnit.Ampere, value[..value.IndexOf('*')]));
+                return;
             case "1-0:71.7.0":
-                return DataType.L3Amperage;
+                data.Add(DataType.L3Amperage, new RecordValue(RecordUnit.Ampere, value[..value.IndexOf('*')]));
+                return;
 
             case "1-0:21.7.0":
-                return DataType.L1PowerUsage;
+                data.Add(DataType.L1PowerUsage, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "1-0:41.7.0":
-                return DataType.L2PowerUsage;
+                data.Add(DataType.L2PowerUsage, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "1-0:61.7.0 ":
-                return DataType.L3PowerUsage;
+                data.Add(DataType.L3PowerUsage, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "1-0:22.7.0":
-                return DataType.L1PowerGenerated;
+                data.Add(DataType.L1PowerGenerated, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "1-0:42.7.0":
-                return DataType.L2PowerGenerated;
+                data.Add(DataType.L2PowerGenerated, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
             case "1-0:62.7.0":
-                return DataType.L3PowerGenerated;
+                data.Add(DataType.L3PowerGenerated, new RecordValue(RecordUnit.Watt, (decimal.Parse(value[..value.IndexOf('*')]) * 1000).ToString()));
+                return;
 
             case "0-n:24.2.1":
-                return DataType.GasUsed;
+                throw new NotImplementedException();
 
             case "0-0:96.1.4":
             case "0:96.1.4":
-                return DataType.ProtocolVersion;
+                data.Add(DataType.ProtocolVersion, new RecordValue(RecordUnit.String, value));
+                return;
             case "0-0:96.3.10":
-                return DataType.PowerBreakerState;
+                data.Add(DataType.PowerBreakerState, new RecordValue(RecordUnit.Boolean, value));
+                return;
             case "0-0:17.0.0":
-                return DataType.MaxPhasePower;
+                data.Add(DataType.MaxPhasePower, new RecordValue(RecordUnit.Kilowatt, value[..value.IndexOf('*')]));
+                return;
             case "1-0:31.4.0":
-                return DataType.L1FuseThreshold;
+                data.Add(DataType.L1FuseThreshold, new RecordValue(RecordUnit.Ampere, value[..value.IndexOf('*')]));
+                return;
             case "0-0:96.13.0":
-                return DataType.TextMessage;
+                data.Add(DataType.TextMessage, new RecordValue(RecordUnit.String, value));
+                return;
             case "0-1:24.1.0":
-                return DataType.DevicesOnBus;
+                data.Add(DataType.DevicesOnBus, new RecordValue(RecordUnit.Integer, value));
+                return;
             case "0-1:96.1.1":
-                return DataType.GasDeviceSerialNumber;
+                data.Add(DataType.GasDeviceSerialNumber, new RecordValue(RecordUnit.String, value));
+                return;
             case "0-1:24.4.0":
-                return DataType.GasBreakerState;
+                data.Add(DataType.GasBreakerState, new RecordValue(RecordUnit.Boolean, value));
+                return;
             case "0-1:24.2.3":
-                return DataType.GasUsageRecord;
+                data.Add(DataType.GasUsageTimeStamp, new RecordValue(RecordUnit.Timestamp, value[..value.IndexOf(')')]));
+                var gasUsed = value[(value.IndexOf('(') + 1)..];
+                data.Add(DataType.GasUsed, new RecordValue(RecordUnit.CubicMeter, gasUsed[..gasUsed.IndexOf('*')]));
+                return;
             default:
-                throw new Exception($"{dataType} is an unknown data type");
+                throw new Exception($"{obisCode} is an unknown data type");
         }
     }
 }
