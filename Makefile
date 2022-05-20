@@ -28,3 +28,6 @@ run: container
 
 push: container
 	docker push ${REGISTRY}/${PROJECT_LOWER}:${VERSION}
+	docker tag ${REGISTRY}/${PROJECT_LOWER}:${VERSION} ${REGISTRY}/${PROJECT_LOWER}:latest
+	docker push ${REGISTRY}/${PROJECT_LOWER}:latest
+

@@ -14,11 +14,12 @@ internal class Telegram
     {
         //All data for this telegram was already received
         if (_endIndex != 0 && _data.Count == _endIndex + 5)
-        {        
+        {
             if (char.IsControl(Convert.ToChar(data)))
             {
                 return;
             }
+
             throw new Exception("Telegram is complete, unable to add extra data");
         }
 

@@ -14,10 +14,18 @@ internal class PowerConsumptionData
 
     public void StartReceiving()
     {
-        _receiver.StartReceiving(data =>
-        {
-            _current = DataRecord.FromBytes(data.GetData());
-        });
+        _receiver.StartReceiving(
+            data =>
+            {
+                try
+                {
+                    _current = DataRecord.FromBytes(data.GetData());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to get data: {ex.Message}: {ex.StackTrace}");
+                }
+            });
     }
 
     public DataRecord Get()

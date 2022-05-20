@@ -27,8 +27,7 @@ When running from docker make sure to pass through the `/dev/ttyUSB0` device.
 
 ## Reading form a web endpoint
 
-It's not always desirable to run this web server on the same device as the device hooked up to the P! port.  
-
+It's not always desirable to run this web server on the same device.  
 For example when a micro controller is used.  
 A python script is included in `./src/read_p1.py` that can read out the data and put it in a file.  
 All you then need is a small web server to host the file.  
