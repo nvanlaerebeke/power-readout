@@ -4,9 +4,10 @@ PROJECT="PowerReadOut"
 PROJECT_LOWER=$(shell echo $(PROJECT) | tr A-Z a-z)
 PWD=$(shell pwd)
 
-REGISTRY:=registry.crazyzone.be
+REGISTRY:=registry.hub.docker.com
 VERSION:=$(shell cat VERSION | tr --delete '/n')
 ARCH:=linux-x64
+#ARCH:=linux-arm64
 PORT:=8080
 
 clean:

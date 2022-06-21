@@ -2,22 +2,27 @@ namespace PowerReadOut.Receivers;
 
 internal class WebReceiver : IReceiver
 {
-    /// <summary>
-    ///     Number of seconds to wait to poll
-    /// </summary>
-    private const int POLL_INTERVAL = 1;
-
-    /// <summary>
-    ///     Url to poll from
-    /// </summary>
-    private const string URL = "http://power.crazyzone.be/readout";
-
     private readonly HttpClient _httpClient;
 
     public WebReceiver()
     {
         _httpClient = new HttpClient();
     }
+
+    /// <summary>
+    ///     Number of seconds to wait to poll
+    ///     Default: 1 second
+    ///     To change this value set the PollInterval environment variable
+    /// </summary>
+    private int PollInterval => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PollInterval"))
+        ? int.Parse(Environment.GetEnvironmentVariable
+            ("PollInterval")!)
+        : 1;
+
+    /// <summary>
+    ///     Url to poll from
+    /// </summary>
+    private string Url => Environment.GetEnvironmentVariable("Url") ?? throw new Exception("Url not set");
 
     public async Task StartReceiving(Action<Telegram> telegramReceived)
     {
@@ -27,7 +32,7 @@ internal class WebReceiver : IReceiver
             {
                 try
                 {
-                    var response = await _httpClient.GetAsync(URL);
+                    var response = await _httpClient.GetAsync(Url);
                     var data = await response.Content.ReadAsByteArrayAsync();
                     var telegram = Parse(data);
                     if (telegram != null)
@@ -36,7 +41,7 @@ internal class WebReceiver : IReceiver
                     }
                     else
                     {
-                        Console.WriteLine($"Invalid telegram received from {URL}");
+                        Console.WriteLine($"Invalid telegram received from {Url}");
                     }
                 }
                 catch (Exception ex)
@@ -45,7 +50,7 @@ internal class WebReceiver : IReceiver
                 }
                 finally
                 {
-                    await Task.Delay(POLL_INTERVAL * 1000);
+                    await Task.Delay(PollInterval * 1000);
                 }
             }
         });
