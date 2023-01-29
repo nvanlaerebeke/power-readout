@@ -5,7 +5,7 @@ namespace PowerReadOut;
 internal class PowerConsumptionData
 {
     private readonly IReceiver _receiver;
-    private DataRecord _current;
+    private DataRecord? _current;
 
     public PowerConsumptionData(IReceiver receiver)
     {
@@ -28,8 +28,12 @@ internal class PowerConsumptionData
             });
     }
 
-    public DataRecord Get()
+    public DataRecord? Get()
     {
+        if (_current == null)
+        {
+            Console.WriteLine("No data yet...");
+        }
         return _current;
     }
 }

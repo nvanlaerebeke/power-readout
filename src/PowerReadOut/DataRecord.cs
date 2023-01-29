@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace PowerReadOut;
 
-internal struct DataRecord
+internal class DataRecord
 {
     private readonly Dictionary<DataType, RecordValue> _data;
 
@@ -296,8 +296,12 @@ internal struct DataRecord
                 var gasUsed = value[(value.IndexOf('(') + 1)..];
                 data.Add(DataType.GasUsed, new RecordValue(RecordUnit.CubicMeter, gasUsed[..gasUsed.IndexOf('*')]));
                 return;
+            case "1-0:1.4.0":
+                data.Add(DataType.PowerAverage, new RecordValue(RecordUnit.Kilowatt, value[..value.IndexOf('*')]));
+                return;
             default:
-                throw new Exception($"{obisCode} is an unknown data type");
+                Console.WriteLine($"{obisCode} is an unknown data type");
+                return;
         }
     }
 }

@@ -9,6 +9,7 @@ internal enum DataType
     PowerUsedTariff2,
     PowerGeneratedTariff1,
     PowerGeneratedTariff2,
+    PowerAverage,
     CurrentTariff,
     TotalPowerGenerated,
     TotalPowerUsed,

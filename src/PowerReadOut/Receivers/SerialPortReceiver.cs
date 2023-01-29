@@ -84,6 +84,7 @@ internal class SerialPortReceiver : IReceiver, IDisposable
     /// <param name="eventArgs"></param>
     private void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs eventArgs)
     {
+        Console.WriteLine("Receiving data...");
         var data = new byte[_serialPort.BytesToRead];
         _serialPort.Read(data, 0, data.Length);
         foreach (var item in data)
@@ -92,11 +93,13 @@ internal class SerialPortReceiver : IReceiver, IDisposable
             if (SLASH == item)
             {
                 _telegram = new Telegram();
+                Console.WriteLine("Telegram beginning detected...");
             }
             else
             {
                 if (!_telegram.HasStarted())
                 {
+                    Console.WriteLine("Receiving data outside of telegram...");
                     continue;
                 }
             }
@@ -104,6 +107,7 @@ internal class SerialPortReceiver : IReceiver, IDisposable
             //If the telegram is already complete, don't do anything
             if (_telegram.IsComplete())
             {
+                Console.WriteLine("Telegram completed, skip adding data...");
                 continue;
             }
 
@@ -113,8 +117,10 @@ internal class SerialPortReceiver : IReceiver, IDisposable
             //If the telegram is complete (and valid), let the application know
             if (_telegram.IsComplete())
             {
+                Console.WriteLine("Telegram complete...");
                 if (_telegram.IsValid() && _telegramReceived != null)
                 {
+                    Console.WriteLine("Telegram valid, notify word...");
                     _telegramReceived(_telegram);
                 }
             }

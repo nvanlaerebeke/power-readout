@@ -6,8 +6,9 @@ PWD=$(shell pwd)
 
 REGISTRY:=registry.hub.docker.com
 VERSION:=$(shell cat VERSION | tr --delete '/n')
-ARCH:=linux-x64
+#ARCH:=linux-x64
 #ARCH:=linux-arm64
+ARCH:=linux-arm
 PORT:=8080
 
 clean:
