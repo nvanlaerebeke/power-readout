@@ -19,6 +19,7 @@ pipeline {
     stage('build') {
       when { anyOf {
         branch "master";
+        branch "main"
         branch "stable";
         branch "dev";
         expression{params.FORCE_PUSH == true }
