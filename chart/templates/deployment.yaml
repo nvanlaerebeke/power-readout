@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ $.Values.name }}
+  name:  {{ $.Values.name }}
+spec:
+  replicas:  {{ $.Values.resources.replicaCount }}
+  selector:
+    matchLabels:
+      app:  {{ $.Values.name }}
+  template:
+    metadata:
+      labels:
+        app:  {{ $.Values.name }}
+    spec:
+      tolerations:
+      {{- range $toleration := .Values.tolerations }}
+      - key: {{ $toleration.key | quote }} 
+        value: {{ $toleration.value | quote }}
+        operator: {{ $toleration.operator | quote }}
+        effect: {{ $toleration.effect | quote }}
+      {{- end }}  
+      affinity:
+        nodeAffinity: 
+          requiredDuringSchedulingIgnoredDuringExecution: 
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: type
+                operator: In 
+                values:
+                - power
+      containers:
+      - image: "{{ .Values.global.registry }}/{{ .Values.global.image }}:{{ .Values.global.tag }}"
+        name:  {{ $.Values.name }}
+        volumeMounts:
+        - mountPath: /dev/ttyUSB
+          name: dev-usb0
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 80
+          name: {{ $.Values.name }}
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: dev-usb0
+        hostPath:
+          path: {{ $.Values.device.path }}

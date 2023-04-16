@@ -12,7 +12,7 @@ pipeline {
   } 
   agent {
     kubernetes {
-      yaml getPodTemplate("buildkit")
+      yaml getPodTemplate("buildkitWithHelm")
     }
   }
   stages {

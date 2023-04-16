@@ -1,0 +1,20 @@
+name: power-reader
+global:
+  registry: harbor.crazyzone.be/crazyzone
+  image: power-reader
+  tags: latest
+device:
+  path: /dev/ttyUSB0
+resources:
+  replicaCount: 1
+hostnames:
+  - power-reader.crazyzone.be
+tolerations:
+  - key: "type"
+    value: "power"
+    operator: "Equal"
+    effect: "NoSchedule"
+ingress:
+  enabled: true
+  tls:
+    existingSecret: secret-tls
