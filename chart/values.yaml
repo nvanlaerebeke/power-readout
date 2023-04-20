@@ -1,7 +1,7 @@
 name: power-reader
 global:
   registry: harbor.crazyzone.be/crazyzone
-  image: power-reader
+  image: powerreader
   tag: latest
 device:
   path: /dev/ttyUSB0
