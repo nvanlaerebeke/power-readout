@@ -52,3 +52,7 @@ spec:
       - name: dev-usb0
         hostPath:
           path: {{ $.Values.device.path }}
+{{- if $.Values.global.existingRegisrySecret }}          
+      imagePullSecrets:
+        - name: {{ $.Values.global.existingRegisrySecret }}
+{{ end }}

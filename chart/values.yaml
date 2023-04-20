@@ -3,6 +3,8 @@ global:
   registry: harbor.crazyzone.be/crazyzone
   image: powerreader
   tag: latest
+  #Use an existing secret for your registry
+  #existingRegisrySecret: ""
 device:
   path: /dev/ttyUSB0
 resources:
