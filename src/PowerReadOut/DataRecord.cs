@@ -9,10 +9,12 @@ namespace PowerReadOut;
 internal class DataRecord
 {
     private readonly Dictionary<DataType, RecordValue> _data;
+    private readonly string _rawData;
 
-    public DataRecord(Dictionary<DataType, RecordValue> data)
+    public DataRecord(Dictionary<DataType, RecordValue> data, string rawData)
     {
         _data = data;
+        _rawData = rawData;
     }
 
     [JsonPropertyName("device_name")]
@@ -174,7 +176,7 @@ internal class DataRecord
             AddRecordValue(record[..data_start], record[(data_start + 1)..^1], ref data);
         }
 
-        return new DataRecord(data);
+        return new DataRecord(data, dataString);
     }
 
     private static void AddRecordValue(string obisCode, string value, ref Dictionary<DataType, RecordValue> data)
@@ -303,5 +305,10 @@ internal class DataRecord
                 Console.WriteLine($"{obisCode} is an unknown data type");
                 return;
         }
+    }
+
+    public override string ToString()
+    {
+        return _rawData;
     }
 }
