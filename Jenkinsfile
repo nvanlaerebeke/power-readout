@@ -26,7 +26,7 @@ pipeline {
       } }
       steps {
         container(name: "buildkit", shell: '/bin/sh') {
-          checkoutAndBuild(env.REPOSITORY, env.REPOSITORY_CREDENTIAL_ID, env.NAME, env.REGISTRY, env.BRANCH_NAME, env.REGISTRY_SECRET_FILE)
+          buildAndPush(env.name, , env.REGISTRY, env.BRANCH_NAME, env.REGISTRY_SECRET_FILE)
         }
         container(name: "helm", shell: '/bin/sh') {
           sh getHelmBuildScript(env.NAME, env.REGISTRY_HELM, REGISTRY_SECRET_FILE_HELM)
