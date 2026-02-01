@@ -2,7 +2,7 @@ name: power-reader
 global:
   registry: harbor.crazyzone.be/crazyzone
   image: power-reader
-  tag: latest
+  tag: 0.0.12
   #Use an existing secret for your registry
   #existingRegisrySecret: ""
 device:
