@@ -2,7 +2,7 @@
 pipeline {
   parameters { booleanParam(name: 'FORCE_PUSH', defaultValue: false, description: 'Will force the publishing of the packages to the registry & repository') }
   environment {
-    NAME = 'powerreader'
+    NAME = 'power-readout'
     REPOSITORY = 'git@github.com:nvanlaerebeke/power-readout.git'
     REPOSITORY_CREDENTIAL_ID = 'adfe5c5e-1b1c-4ecb-9b00-e08fe30f9c8b'
     REGISTRY = "harbor.crazyzone.be/crazyzone"
