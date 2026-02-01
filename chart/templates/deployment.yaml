@@ -39,13 +39,13 @@ spec:
         securityContext:
           privileged: true
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: {{ $.Values.name }}
         readinessProbe:
           httpGet:
             scheme: HTTP
             path: /
-            port: 80
+            port: 8080
           initialDelaySeconds: 10
           periodSeconds: 5
       volumes:
