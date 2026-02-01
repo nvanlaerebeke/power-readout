@@ -1,20 +1,31 @@
 using PowerReadOut;
 using PowerReadOut.Receivers;
 
-//Data source
-IReceiver receiver = Environment.GetEnvironmentVariable("DataSource") == "Web" ? new WebReceiver() : new SerialPortReceiver();
-
-//Start receiving data from the data source
-var powerConsumptionData = new PowerConsumptionData(receiver);
-powerConsumptionData.StartReceiving();
-
 //Create the application
 var app = WebApplication.CreateBuilder(args).Build();
 
-//Configure web endpoints
-app.MapGet("/metrics", () => powerConsumptionData.Get());
-app.MapGet("/raw", () => powerConsumptionData.ToString());
-app.MapGet("/", () => "Hello World");
+try
+{
+    //Data source
+    IReceiver receiver = Environment.GetEnvironmentVariable("DataSource") == "Web" ? new WebReceiver() : new SerialPortReceiver();
 
-//Start the application
+    //Start receiving data from the data source
+    var powerConsumptionData = new PowerConsumptionData(receiver);
+    powerConsumptionData.StartReceiving();
+    
+    //Configure web endpoints
+    app.MapGet("/metrics", () => powerConsumptionData.Get());
+    app.MapGet("/raw", () => powerConsumptionData.ToString());
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+}
+
+Console.WriteLine("Configure kubernetes liveness probes");
+app.MapGet("/livez", () => "lives");
+app.MapGet("/readyz", () => "lives");
+app.MapGet("/healthz", () => "lives");
+
+Console.WriteLine("Starting application");
 app.Run();

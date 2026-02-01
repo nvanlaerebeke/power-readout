@@ -8,7 +8,6 @@ COPY ./src ./
 RUN dotnet restore
 RUN dotnet publish -c Release -o /build -r "${ARCH}" \
     --self-contained true \
-    -p:PublishTrimmed=true \
     -p:DebugSymbols=false \
     -p:DebugType=None \
     "PowerReadOut/PowerReadOut.csproj"
