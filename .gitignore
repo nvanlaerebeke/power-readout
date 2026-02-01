@@ -4,7 +4,7 @@
 # Custom entries
 data
 .idea
-
+dist
 ###################
 # compiled source #
 ###################
