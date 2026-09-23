@@ -36,4 +36,9 @@ internal class PowerConsumptionData
 
         return _current;
     }
+
+    public override string ToString()
+    {
+        return _current?.ToString() ?? string.Empty;
+    }
 }

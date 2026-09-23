@@ -15,7 +15,7 @@ REGISTRY_HELM:=harbor.crazyzone.be/crazyzone-helm
 
 
 clean:
-	rm -rf build
+	rm -rf build dist
 
 build:
 	mkdir -p "${PWD}/build/"
